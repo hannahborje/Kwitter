@@ -30,6 +30,7 @@ class TwitterClient:
     def __init__(self):
         # Skapa en instans av Seleniums Firefox driver
         self.browser = webdriver.Firefox()
+        self.browser.implicitly_wait(5) # seconds
 
     def get_url(self, port):
         # Öppna önskad URL

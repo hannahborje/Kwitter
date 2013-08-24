@@ -3,6 +3,8 @@
   Laboration 1
   lab1.css
   Per Jonsson, Hannah Börjesson IP2
+
+  KRAV: Valideras som CSS (nivå 3)
 */
 
 body {
@@ -41,7 +43,7 @@ button {
     padding: 2%;
     font-family: Helvetica, sans-serif;
     font-size: small;
-    backgrund-color: #E6E6E6;
+    background-color: #E6E6E6;
     background-image: linear-gradient(#FFFFFF, #E6E6E6);
 }
 
