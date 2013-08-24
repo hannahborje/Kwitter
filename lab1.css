@@ -1,0 +1,103 @@
+/*
+  TDP013
+  Laboration 1
+  lab1.css
+  Per Jonsson, Hannah Börjesson IP2
+*/
+
+body {
+    background-color: #CCFFFF;
+}
+
+div {
+    border-radius: 1%;
+}
+
+h1 {
+    margin: auto;
+    font-size: 2em;
+    font-family: Courier, sans-serif;
+}
+
+button {
+    background-color: #A7DBD8;
+    border: 2px solid black;
+    border-radius: 5px;
+    font-size: small;
+    font-weight: bold;
+}
+
+#logo {
+    width: 7em;
+    margin: auto;
+}
+
+/* Innehåller innehållet i tweeten */
+#tweetmsg {
+    word-wrap: break-word; /* om någon inte lägger till mellanslag mellan ord */
+    border: 1px solid #ebebeb;
+    border-radius: 3%;
+    margin: 15px 30% 1% 15%;
+    padding: 2%;
+    font-family: Helvetica, sans-serif;
+    font-size: small;
+    backgrund-color: #E6E6E6;
+    background-image: linear-gradient(#FFFFFF, #E6E6E6);
+}
+
+#checkbox {
+    float:right; 
+}
+
+/* Behållare till tweet-elementen */
+#tweetarea {
+    width: 75%;
+    margin: auto;
+    padding: 10px;
+    border-radius: 1px;
+}
+
+/* Där man komponenerar sin tweet */
+#textarea {
+    margin-left: 15%;
+    border: 3px solid black;
+    border-radius: 3%;
+    padding:2%;
+    resize: none
+}
+
+/* Klass för både felmeddelande och tweet-element */
+.message {
+    margin: auto;
+}
+
+/* Felmeddelande */
+#error  {
+    color: rgba(0,0,0,0.4);
+    font-family: Helvetica, sans-serif;
+    font-size: small;
+    margin: auto;
+    padding: 7px 7px;
+    width: 29em;
+    font-weight: bold;
+}
+
+/* Design-element som skapar centrerad vy */
+.container {
+    position:absolute;
+    height: 100%;
+    width:100%
+}
+
+/* Behållare för den väsentliga presentationsytan */
+#timeline {
+    margin: auto;
+    padding: 20px;
+    width: 45em;
+    background-color: #A7DBD8;
+    background-image: linear-gradient(#CCFFFF, #A7DBD8);
+    min-height: 100%;
+}
+
+
+
