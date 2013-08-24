@@ -1,0 +1,59 @@
+<!--
+   TDP013
+   Laboration 1
+   lab1.html
+   Per Jonsson, Hannah Börjesson IP2
+
+   Uppfyller kravet att likna layouten i schema 1
+-->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+    <meta name="author" content="Per Jonsson, Hannah Börjesson IP2" />
+    <meta name="description" content="TDP013: Lab 1" />
+    
+    <title>Kwitter</title>
+    <link type="text/css" rel="stylesheet" href="lab1.css"/>
+    <script type="text/javascript" src="lab1.js"></script>
+  </head>
+  <body>
+    <!-- Centrerad design med innehåll i mittenkolumn -->
+    <div class = "container">
+      <!-- Här finns det dynamiska innehållet -->
+      <div id ="timeline">
+       
+        <div id = "logo">
+          <!-- Free license image:
+            http://findicons.com/icon/205503/twitter_bird?id=398605-->
+          <img src ="twitter_bird.png"/>
+        </div>
+
+        <!-- Här hamnar input och meddelanden-->
+        <div id="tweetarea">
+  
+          <textarea id="textarea" onclick="resetText()" rows="4" cols="38">Sjung ut!
+          </textarea>
+          
+          <button id="button" onclick="validateInput()">Kvittra</button>
+
+          <div class = "message">
+            <p id="error">
+              <!-- felmeddelande hamnar här -->
+            </p> 
+          </div>
+
+          <div class ="message">
+            <div id = "tweet">
+              <!-- tweetmsg hamnar här -->
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div> 
+  </body>
+</html>
