@@ -42,6 +42,7 @@ class TwitterClient:
         # Kolla att sidan har laddats genom att se om titeln är vår egen
         assert title in self.browser.title, error
 
+
     def test_tweets(self, tweets, error_msg):
         """ KRAV 1: En användare ska kunna skriva in ett meddelande i ett fält
             KRAV 2: En användare ska kunna, genom att klicka på en knapp,
@@ -58,9 +59,12 @@ class TwitterClient:
         # Skriv tweets + klicka på publicera
         for t in tweets:
             self.send_tweet(t, textarea, button)            
-            # Kan hitta tweet:en i trädet? Leta felmeddelande annars
-            if not self.assert_tweet(t):
-                self.assert_error_msg(t, error_msg)                   
+            # Kan vi hitta tweet:en i trädet? Leta felmeddelande annars
+            caught_tweet = self.find_tweet()
+            print "Hittade tweeten i trädet"
+            if not self.assert_tweet(t.strip(), caught_tweet.text.encode('utf-8')):
+                self.assert_error_msg(t, error_msg)
+            # Testa sedan kronologisk ordning
 
     def send_tweet(self, tweet, textarea, button):
         print "Skickar tweet: ", repr(tweet)
@@ -69,9 +73,13 @@ class TwitterClient:
         textarea.send_keys(t) 
         button.click() 
 
-    def find_tweet(self, sent_tweet):
-        return self.browser.find_element_by_id("tweetmsg").text
-
+    def find_tweet(self):
+        """ KRAV 4: Ett meddelande som är publicerat skall visas i kronologiskt
+        fallande (senast först) ordning nedanför textfältet."""
+        # find_element_by_id returnerar alltid det första/översta elementet
+        # därmed kan vi testa att det översta elementet är det vi senast skickat
+        return self.browser.find_element_by_id("tweetmsg")
+    
     def find_tweets(self):
         return self.browser.find_elements_by_id("tweetmsg")
 
@@ -81,15 +89,11 @@ class TwitterClient:
         print "Tweeten som skickades var: ", repr(tweet), "\n med längd: ", length      
         return length < 1 or length > 140
 
-    def assert_tweet(self, sent_tweet):
-        # Leta efter den förväntade tweeten i html-trädet
-        caught_tweet = self.find_tweet(sent_tweet).encode('utf-8')
-        print "Hittade tweeten i trädet"
-        print "Testar matcha: ", repr(sent_tweet), "mot: ", repr(caught_tweet)
-        if sent_tweet.strip() == caught_tweet:
+    def assert_tweet(self, tweet1, tweet2):
+        print "Testar matcha: ", repr(tweet1), "mot: ", repr(tweet2)
+        if tweet1 == tweet2:
             print "Lyckades"
             return True
-        
         print "Lyckades inte matcha"
         return False
 
@@ -103,7 +107,7 @@ class TwitterClient:
          ska det inte publiceras och ett felmeddelande ska visas"""
          error_msg = error_msg.decode('utf-8').strip()
          caught_error_msg = self.find_error_msg().text
-              
+         
          if self.tweet_exceeds_limits(tweet):
              print "Otillåten längd på tweet"
              assert caught_error_msg == error_msg, "Hittade ingen tweet och inget felmeddelande"
@@ -132,16 +136,6 @@ class TwitterClient:
         for c in checkboxes:
             c.click()
 
-            
-
-    def test_order(self, sent_tweets):
-        """ KRAV 4: Ett meddelande som är publicerat skall visas i kronologiskt
-        fallande (senast först) ordning nedanför textfältet"""
-        #self.tweet_exceeds_limits(sent_tweets)
-        pass
-
-
-    
 
     def refresh(self):
         self.browser.refresh()

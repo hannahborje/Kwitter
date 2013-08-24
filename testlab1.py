@@ -42,7 +42,6 @@ if __name__ == '__main__':
            print "Startar testning:"        
            client.test_tweets(tweets, error_msg[0])
            client.test_checkboxes()
-           client.test_order(tweets) 
            client.test_refresh()
            
        except (KeyboardInterrupt, SystemExit):
