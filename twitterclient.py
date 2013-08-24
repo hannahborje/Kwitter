@@ -20,8 +20,13 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 
-import time
+#import time
 
+import logging
+LOG_FILENAME = 'kwitter.log'
+logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG)
+
+#ximport pytest # ???
 
 class TwitterClient:
     """ Innehåller metoder för att automatiserad testning av kraven på vår
@@ -35,7 +40,7 @@ class TwitterClient:
     def get_url(self, port):
         # Öppna önskad URL
         url = "http://127.0.0.1:{0}/lab1.html".format(port)
-        print "Försöker öppna: {0} ".format(url)
+        logging.debug("Försöker öppna: {0} ".format(url))
         self.browser.get(url)
     
     def assert_connection(self, title):
@@ -53,7 +58,7 @@ class TwitterClient:
         textarea = self.browser.find_element_by_id("textarea")
         button = self.browser.find_element_by_id("button")
         
-        print "Skapar och publicerar tweets:"
+        logging.debug("Skapar och publicerar tweets:")
         # lägg till default-tweeten som finns i textarean först
         tweets.insert(0, textarea.text) 
 
@@ -62,13 +67,13 @@ class TwitterClient:
             self.send_tweet(t, textarea, button)            
             # Kan vi hitta tweet:en i trädet? Leta felmeddelande annars
             caught_tweet = self.find_tweet()
-            print "Hittade tweeten i trädet"
+            logging.debug("Hittade tweeten i trädet")
             if not self.assert_tweet(t.strip(), caught_tweet.text.encode('utf-8')):
                 self.assert_error_msg(t, error_msg)
             # Testa sedan kronologisk ordning
 
     def send_tweet(self, tweet, textarea, button):
-        print "Skickar tweet: ", repr(tweet)
+        logging.debug("Skickar tweet: " + repr(tweet))
         t = tweet.decode('utf-8').strip() # för ÅÄÖ
         textarea.click() # fokus på textrutan          
         textarea.send_keys(t) 
@@ -85,22 +90,22 @@ class TwitterClient:
         return self.browser.find_elements_by_id("tweetmsg")
 
     def tweet_exceeds_limits(self, tweet):
-        print "Kollar längd på tweeten som skickades"
+        logging.debug("Kollar längd på tweeten som skickades")
         length = len(tweet)
-        print "Tweeten som skickades var: ", repr(tweet), "\n med längd: ", length      
+        logging.debug("Tweeten som skickades var: " + repr(tweet) + " \n med längd: " + str(length))  
         return length < 1 or length > 140
 
     def assert_tweet(self, tweet1, tweet2):
-        print "Testar matcha: ", repr(tweet1), "mot: ", repr(tweet2)
+        logging.debug("Testar matcha: " + repr(tweet1) + " mot: " + repr(tweet2))
         if tweet1 == tweet2:
-            print "Lyckades"
+            logging.debug("Lyckades")
             return True
-        print "Lyckades inte matcha"
+        logging.debug("Lyckades inte matcha")
         return False
 
     def find_error_msg(self):
         # Felmeddelande genereras enbart om tweet är < 0 || > 140 tecken
-        print "Letar efter felmeddelande i trädet"
+        logging.debug("Letar efter felmeddelande i trädet")
         return self.browser.find_element_by_id("error")
 
     def assert_error_msg(self, tweet, error_msg):
@@ -110,15 +115,15 @@ class TwitterClient:
          caught_error_msg = self.find_error_msg().text
          
          if self.tweet_exceeds_limits(tweet):
-             print "Otillåten längd på tweet"
+             logging.debug("Otillåten längd på tweet")
              assert caught_error_msg == error_msg, "Hittade ingen tweet och inget felmeddelande"
-             print "Hittade ett felmeddelande: ", caught_error_msg
+             logging.debug("Hittade ett felmeddelande: " + caught_error_msg)
         
     def test_checkboxes(self):
         # Hur många bör vi hitta = antalet tweets
         checkboxes = self.find_checkboxes()
         num_boxes = len(checkboxes)
-        print "Letar checkboxar, hittade: ", num_boxes
+        logging.debug("Letar checkboxar, hittade: " + str(num_boxes))
         
         # klicka, så att de försvinner
         if num_boxes > 0:
@@ -144,8 +149,8 @@ class TwitterClient:
     def test_refresh(self):
         caught_tweets = self.find_tweets()
         num_tweets = len(caught_tweets)
-        print "Laddar om sidan"
-        print "Innan omladdning finns: ", num_tweets, " antal tweets"
+        logging.debug("Laddar om sidan")
+        logging.debug("Innan omladdning finns: " + str(num_tweets) + " antal tweets")
         self.refresh()
         self.assert_refresh()        
 
@@ -155,8 +160,7 @@ class TwitterClient:
         # inga poster ska hittas
         caught_tweets = self.find_tweets()
         num_tweets = len(caught_tweets)       
-        print "Efter omladdning hittades: ", len(caught_tweets), " antal tweets"
-        #assert 0
+        logging.debug("Efter omladdning hittades: " + str(len(caught_tweets)) + " antal tweets")
     
     def quit(self):
         self.browser.quit()
