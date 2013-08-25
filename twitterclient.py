@@ -11,7 +11,9 @@ Uppfyller kravet att testa alla krav med Selenium
 
 OBS!
 För att installera Selenium: $ pip install -U selenium
-Exekveringen förutsätter att Firefox också finns installerat 
+Exekveringen förutsätter att Firefox också finns installerat
+
+Testat i Python v.2.7.3
 """
 
 from selenium import webdriver
