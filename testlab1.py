@@ -11,17 +11,21 @@ För att installera Selenium: $ pip install -U selenium
 För att köra på localhost: använd modulen SimpleHTTPServer
 Starta testservern med: $ python -m SimpleHTTPServer XXXX
 Exekvera med: $ python testlab1.py XXXX
-(XXXX = portnummer)
- 
+(XXXX = portnummer, t.ex. 8000)
+
+Testat i Python v.2.7.3
 """
+
 #ximport pytest #???
 
 from twitterclient import TwitterClient # se twitterclient.py
 from testserver import Server # se server.py
 
-      
-if __name__ == '__main__':
+import logging
+LOG_FILE = 'kwitter.log'
+logging.basicConfig(filename=LOG_FILE, level=logging.DEBUG)
 
+if __name__ == '__main__':
     # Ladda in  tweets att testa, från fil
     with open("test_tweets.txt", "r") as source_tweets:
         tweets = source_tweets.readlines()
@@ -39,30 +43,36 @@ if __name__ == '__main__':
        client.assert_connection(title)
        
        try:
-           print "Startar testning:"        
+           msg = "Startar testning"
+           logging.info(msg)
+           print(msg)        
            client.test_tweets(tweets, error_msg[0])
            client.test_checkboxes()
            client.test_refresh()
            
        except (KeyboardInterrupt, SystemExit):
-           print "Program avslutades av användaren"
+           logging.error("Program avslutades av användaren")
        except AssertionError as e:
-           print "Fel vid assert: ", e
+           logging.error("Fel vid assert: {0}".format(e))
        except UnicodeDecodeError as e:
-           print "Unicode-fel", e
+           logging.error("Unicode-fel: {0}".format(e))
        except Exception as e:
-           print "Fel uppstod vid testning: ", e
+           logging.error("Fel uppstod vid testning: ".format(e))
                       
        # Om inga fel uppstått under testning    
        else:
-           print "Testning genomförd (OK)"
+           msg = "Testning genomförd (OK)"
+           logging.info(msg)
+           print(msg)
 
     # Uppstartsfel
     except Exception as e:
-        print "Fel uppstod vid laddning av html-sida: ", e       
+        logging.error("Fel uppstod vid laddning av html-sida: {0}".format(e))       
 
     # Oavsett om fel uppstått under uppstart - gör följande
     finally:
-        print "Slut på testning, stänger webbläsare"
+        msg = "Slut på testning, stänger webbläsare"
+        logging.info(msg)
+        print(msg)
         client.quit() 
        

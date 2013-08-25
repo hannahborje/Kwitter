@@ -13,18 +13,13 @@ OBS!
 För att installera Selenium: $ pip install -U selenium
 Exekveringen förutsätter att Firefox också finns installerat 
 """
+
 from selenium import webdriver
-from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC 
-from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 
-#import time
-
 import logging
-LOG_FILENAME = 'kwitter.log'
-logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG)
 
 #ximport pytest # ???
 
@@ -58,7 +53,7 @@ class TwitterClient:
         textarea = self.browser.find_element_by_id("textarea")
         button = self.browser.find_element_by_id("button")
         
-        logging.debug("Skapar och publicerar tweets:")
+        logging.info("Skapar och publicerar tweets:")
         # lägg till default-tweeten som finns i textarean först
         tweets.insert(0, textarea.text) 
 
@@ -67,7 +62,7 @@ class TwitterClient:
             self.send_tweet(t, textarea, button)            
             # Kan vi hitta tweet:en i trädet? Leta felmeddelande annars
             caught_tweet = self.find_tweet()
-            logging.debug("Hittade tweeten i trädet")
+            logging.info("Hittade tweeten i trädet")
             if not self.assert_tweet(t.strip(), caught_tweet.text.encode('utf-8')):
                 self.assert_error_msg(t, error_msg)
             # Testa sedan kronologisk ordning
@@ -90,7 +85,7 @@ class TwitterClient:
         return self.browser.find_elements_by_id("tweetmsg")
 
     def tweet_exceeds_limits(self, tweet):
-        logging.debug("Kollar längd på tweeten som skickades")
+        logging.info("Kollar längd på tweeten som skickades")
         length = len(tweet)
         logging.debug("Tweeten som skickades var: " + repr(tweet) + " \n med längd: " + str(length))  
         return length < 1 or length > 140
@@ -100,12 +95,12 @@ class TwitterClient:
         if tweet1 == tweet2:
             logging.debug("Lyckades")
             return True
-        logging.debug("Lyckades inte matcha")
+        logging.error("Lyckades inte matcha")
         return False
 
     def find_error_msg(self):
         # Felmeddelande genereras enbart om tweet är < 0 || > 140 tecken
-        logging.debug("Letar efter felmeddelande i trädet")
+        logging.info("Letar efter felmeddelande i trädet")
         return self.browser.find_element_by_id("error")
 
     def assert_error_msg(self, tweet, error_msg):
@@ -115,9 +110,9 @@ class TwitterClient:
          caught_error_msg = self.find_error_msg().text
          
          if self.tweet_exceeds_limits(tweet):
-             logging.debug("Otillåten längd på tweet")
+             logging.warning("Otillåten längd på tweet")
              assert caught_error_msg == error_msg, "Hittade ingen tweet och inget felmeddelande"
-             logging.debug("Hittade ett felmeddelande: " + caught_error_msg)
+             logging.warning("Hittade ett felmeddelande: " + caught_error_msg)
         
     def test_checkboxes(self):
         # Hur många bör vi hitta = antalet tweets
@@ -149,8 +144,8 @@ class TwitterClient:
     def test_refresh(self):
         caught_tweets = self.find_tweets()
         num_tweets = len(caught_tweets)
-        logging.debug("Laddar om sidan")
-        logging.debug("Innan omladdning finns: " + str(num_tweets) + " antal tweets")
+        logging.info("Laddar om sidan")
+        logging.info("Innan omladdning finns: " + str(num_tweets) + " antal tweets")
         self.refresh()
         self.assert_refresh()        
 
