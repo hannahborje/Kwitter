@@ -16,7 +16,6 @@ Exekvera med: $ python testlab1.py XXXX
 Testat i Python v.2.7.3
 """
 
-
 from twitterclient import TwitterClient # se twitterclient.py
 from testserver import Server # se server.py
 

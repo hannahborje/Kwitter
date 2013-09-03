@@ -23,8 +23,6 @@ from selenium.webdriver.common.keys import Keys
 
 import logging
 
-#ximport pytest # ???
-
 class TwitterClient:
     """ Innehåller metoder för att automatiserad testning av kraven på vår
     Twitterklon genom att själv agera som användare av webbläsaren """
@@ -88,7 +86,7 @@ class TwitterClient:
 
     def tweet_exceeds_limits(self, tweet):
         logging.info("Kollar längd på tweeten som skickades")
-        length = len(tweet)
+        length = len(tweet.strip())
         logging.debug("Tweeten som skickades var: " + repr(tweet) + " \n med längd: " + str(length))  
         return length < 1 or length > 140
 
@@ -128,7 +126,7 @@ class TwitterClient:
             self.test_checkboxes() # Kolla att de försvunnit
         else:
             # Antal bör vara 0
-            assert (num_boxes == 0), "Borde inte finnas checkboxar kvar nu"
+            assert (num_boxes == 0), "Fel: Borde inte finnas checkboxar kvar nu"
 
     def find_checkboxes(self):
         """ KRAV 5: Alla meddelanden som visas skall ha en knapp
@@ -138,7 +136,6 @@ class TwitterClient:
     def disable_textboxes(self, checkboxes):
         for c in checkboxes:
             c.click()
-
 
     def refresh(self):
         self.browser.refresh()
@@ -156,7 +153,8 @@ class TwitterClient:
         när man laddar om sidan. """
         # inga poster ska hittas
         caught_tweets = self.find_tweets()
-        num_tweets = len(caught_tweets)       
+        num_tweets = len(caught_tweets)
+        assert (num_tweets ==  0), "Fel: Borde inte finnas tweets kvar"
         logging.debug("Efter omladdning hittades: " + str(len(caught_tweets)) + " antal tweets")
     
     def quit(self):
